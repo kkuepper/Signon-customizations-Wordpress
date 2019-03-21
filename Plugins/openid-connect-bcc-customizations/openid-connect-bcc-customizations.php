@@ -23,7 +23,7 @@ function logout_without_confirm($action, $result)
 }
 
 /* Add script tag for single signout */
-add_action('wp_head', 'add_signout_script');
+add_action('wp_footer', 'add_signout_script');
 function add_signout_script(){
 	global $bcc_auth_domain;
 
