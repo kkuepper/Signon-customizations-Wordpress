@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: OpenID Connect Generic (BCC signon customization)
-Description: customazations for the BCC signon system. (support: it@bcc.no)
+Description: customizations for the BCC signon system. (support: it@bcc.no)
 Version: 1.0.0
 Author: BCC
 */
