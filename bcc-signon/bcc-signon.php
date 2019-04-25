@@ -6,6 +6,6 @@ Version: 1.0.0
 Author: BCC
 */
 
-require plugin_dir_path( dirname( __FILE__) ) . 'openid-connect-bcc-customizations/bcc-signon.php';
-require plugin_dir_path( dirname( __FILE__) ) . 'openid-connect-generic-client/openid-connect-generic.php';
+require  dirname( __FILE__) . '/openid-connect-bcc-customizations/bcc-signon.php';
+require  dirname( __FILE__) . '/openid-connect-generic-client/openid-connect-generic.php';
 ?>

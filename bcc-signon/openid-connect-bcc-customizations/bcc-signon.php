@@ -37,10 +37,10 @@ class BCC_Signon {
 	 * Load the required dependencies for this plugin.
 	 */
 	private function load_dependencies() {
-		include_once plugin_dir_path( dirname( __FILE__) ) . 'includes/single-signout.php';
-		include_once plugin_dir_path( dirname( __FILE__) ) . 'includes/newsfeed.php';
-		include_once plugin_dir_path( dirname( __FILE__) ) . 'includes/oidc-configuration.php';
-		include_once plugin_dir_path( dirname( __FILE__) ) . 'includes/privacy-settings.php';
+		include_once plugin_dir_path( dirname( __FILE__) ) . 'openid-connect-bcc-customizations/includes/single-signout.php';
+		include_once plugin_dir_path( dirname( __FILE__) ) . 'openid-connect-bcc-customizations/includes/newsfeed.php';
+		include_once plugin_dir_path( dirname( __FILE__) ) . 'openid-connect-bcc-customizations/includes/oidc-configuration.php';
+		include_once plugin_dir_path( dirname( __FILE__) ) . 'openid-connect-bcc-customizations/includes/privacy-settings.php';
 	}
 
 	/**
