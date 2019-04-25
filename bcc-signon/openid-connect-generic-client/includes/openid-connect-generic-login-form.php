@@ -43,8 +43,9 @@ class OpenID_Connect_Generic_Login_Form {
 			&& ( ! isset( $_GET[ 'action' ] ) || $_GET[ 'action' ] !== 'logout' ) )
 		{
 			if (  ! isset( $_GET['login-error'] ) ) {
+				$this->handle_redirect_cookie();
 				wp_redirect( $this->client_wrapper->get_authentication_url() );
-				exit;
+				exit;	
 			}
 			else {
 				add_action( 'login_footer', array( $this, 'remove_login_form' ), 99 );
