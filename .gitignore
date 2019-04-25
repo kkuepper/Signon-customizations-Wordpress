@@ -1,5 +1,7 @@
 *.log
 wp-config.php
+vendor/**/*
+composer.lock
 wp-content/advanced-cache.php
 wp-content/backup-db/
 wp-content/backups/
