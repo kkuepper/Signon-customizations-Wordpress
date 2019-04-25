@@ -1,11 +1,17 @@
 <?php
 
 /**
+ * Computes the private feed link
+ */
+function get_private_link_feed(){
+	return '/feed/?id=' . get_option('private_newsfeed_link');
+ }
+
+/**
  * Checks if the private link feed is registered within this Wordpress instance
  */
 function private_link_feed() {
-	global $private_newsfeed_link;
-	if($_SERVER['REQUEST_URI'] != '/feed/?id=' . $private_newsfeed_link){
+	if($_SERVER['REQUEST_URI'] != get_private_link_feed()){
 	wp_die(__('No feed available'));  
 	}
 }
@@ -13,7 +19,7 @@ function private_link_feed() {
 /**
  * Adds feed if private newsfeeds is checked
  */
-if ($private_newsfeeds) {
+if (get_option('private_newsfeeds')) {
 	add_action('do_feed', 'private_link_feed', 1);
 	add_action('do_feed_rdf', 'private_link_feed', 1);
 	add_action('do_feed_rss', 'private_link_feed', 1);
@@ -24,5 +30,6 @@ if ($private_newsfeeds) {
 	remove_action( 'wp_head', 'feed_links_extra', 3 ); 
 	remove_action( 'wp_head', 'feed_links', 2 );
 }
+
 
 ?>
