@@ -235,6 +235,9 @@ class OpenID_Connect_Generic {
 			)
 		);
 
+		/* Customize default settings */
+		$settings = apply_filters( 'openid-connect-generic-default-settings', $settings);
+
 		$logger = new OpenID_Connect_Generic_Option_Logger( 'openid-connect-generic-logs', 'error', $settings->enable_logging, $settings->log_limit );
 
 		$plugin = new self( $settings, $logger );
