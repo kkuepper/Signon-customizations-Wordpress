@@ -1,4 +1,10 @@
 <?php
+/**
+ * This file contains all the logic related to the newsfeed, i.e:
+ * Creating a private newsfeed link (with a GUID)
+ * Disabling all the other newfeed links
+ * Unprotecting the private url
+ */
 
 /**
  * Computes the private feed link
@@ -32,6 +38,11 @@ if (get_option('private_newsfeeds') == 1) {
 	// Remove feed links from header
 	remove_action( 'wp_head', 'feed_links_extra', 3 ); 
 	remove_action( 'wp_head', 'feed_links', 2 );
+
+	// Unprotect the endpoint
+	add_filter('bcc_unprotected_urls', function($urls){
+		return array_push($urls, home_url( get_private_link_feed()));
+	});
 }
 
 

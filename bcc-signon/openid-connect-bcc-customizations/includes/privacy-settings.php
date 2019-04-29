@@ -1,4 +1,8 @@
 <?php 
+/**
+ * This function redirects non-authenticated users to the login page.
+ * It is triggered each time a user navigates to a page.
+ */
 
 function bcc_privacy_settings() {
     global $wp;
@@ -9,8 +13,9 @@ function bcc_privacy_settings() {
 	}
 	// Redirect unauthorized visitors
 	if ( !is_user_logged_in() ) {
-        $is_login_url = preg_replace( '/\?.*/', '', $url ) == preg_replace( '/\?.*/', '', wp_login_url());
-        $unprotected_urls = array(home_url( get_private_link_feed()));
+		$is_login_url = preg_replace( '/\?.*/', '', $url ) == preg_replace( '/\?.*/', '', wp_login_url());
+		$unprotected_urls = array();
+		$unprotected_urls = apply_filters('bcc_unprotected_url', $unprotected_urls);
         if ( !$is_login_url  && !in_array( $url, $unprotected_urls) ) {
 			// Set the headers to prevent caching
 			nocache_headers();
