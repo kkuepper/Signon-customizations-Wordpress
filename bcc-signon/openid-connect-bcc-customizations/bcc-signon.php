@@ -18,7 +18,7 @@ class BCC_Signon {
 
 		$this->private_newsfeed_link = esc_attr( get_option('private_newsfeed_link') );
 		if ($this->private_newsfeed_link == "") {
-			$this->private_newsfeed_link = strtolower(str_replace("-","",trim(com_create_guid(), '{}')));
+			$this->private_newsfeed_link = strtolower(str_replace("-","",trim(createGUID(), '{}')));
 			update_option('private_newsfeed_link', $this->private_newsfeed_link);
 		}
 
@@ -28,6 +28,34 @@ class BCC_Signon {
 
 		$this->load_dependencies();
 		add_action('admin_menu', array ($this, 'bcc_signon_plugin_create_menu'));
+	}
+
+	/**
+	 * Helper to create the GUID
+	 */
+	function createGUID()
+	{
+		if (function_exists('com_create_guid'))
+		{
+			return com_create_guid();
+		}
+		else
+		{
+			mt_srand((double)microtime()*10000);
+			//optional for php 4.2.0 and up.
+			$set_charid = strtoupper(md5(uniqid(rand(), true)));
+			$set_hyphen = chr(45);
+			// "-"
+			$set_uuid = chr(123)
+				.substr($set_charid, 0, 8).$set_hyphen
+				.substr($set_charid, 8, 4).$set_hyphen
+				.substr($set_charid,12, 4).$set_hyphen
+				.substr($set_charid,16, 4).$set_hyphen
+				.substr($set_charid,20,12)
+				.chr(125);
+				// "}"
+			return $set_uuid;
+		}
 	}
 
 	/**
@@ -51,9 +79,9 @@ class BCC_Signon {
 		add_options_page('BCC Signon', 'BCC Signon', 'manage_options', $this->options_page_name, array($this, $this->options_page_name));
 		add_action( 'admin_init', function(){
 			/* Sections */
-			add_settings_section( 'oidc', 'OpenId Connect', function(){ echo "Description";} , $this->options_page_name);
-			add_settings_section( 'newsfeed', 'NewsFeed', function(){ echo "Description";} , $this->options_page_name);
-			add_settings_section( 'topbar', 'TopBar', function(){ echo "Description";} , $this->options_page_name);
+			add_settings_section( 'oidc', 'OpenId Connect', function(){} , $this->options_page_name);
+			add_settings_section( 'newsfeed', 'NewsFeed', function(){} , $this->options_page_name);
+			add_settings_section( 'topbar', 'TopBar', function(){} , $this->options_page_name);
 
 			/* Fields */
 			add_settings_field('bcc_auth_domain', "BCC Signon URL", array ($this, 'do_text_field'), $this->options_page_name, 'oidc', 
@@ -100,7 +128,7 @@ class BCC_Signon {
 			class="large-text"
 			value="<?php echo $args['value'];?>" 
 			size="65"
-			<?php if ($args['readonly']): echo "readonly"; endif; ?>>
+			<?php if (isset($agrs['readonly']) && $args['readonly']): echo "readonly"; endif; ?>>
 		<?php
 		$this->do_field_description($args);
 	}
