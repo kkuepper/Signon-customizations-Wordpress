@@ -1,0 +1,21 @@
+{
+"name": "BCC Signon",
+"version": "$_PluginVersion_$",
+"author": "BCC IT",
+"download_url": "https://developer.bcc.no/api/updates/bcc-signon.zip",
+
+"homepage": "https://developer.bcc.no/",
+"requires": "4.0",
+"tested": "5.1.1",
+"last_updated": "$_PluginDate_$",
+"upgrade_notice": "Here's why you should upgrade...",
+
+"author": "BCC IT",
+"author_homepage": "https://developer.bcc.no/",
+
+"sections": {
+"description": "<p>BCC Signon allows you to connect your website to BCC's Login system : only BCC Members will then be allowed to visit your website</p> <h4>What can this plugin do?</h4> <ul> <li>Protect a website with OIDC</li> <li>Single SignOn/SignOut with all BCC's websites</li> <li>Enable BCC Topbar in one click</li> <li>Enable private newsfeeds</li> </ul> <h4>Technical Support</h4> Feel free to send us any question/report any issue at <a href='mailto:it@bcc.no'>it@bcc.no</a>.",
+"installation": "<h4>Plugin installation</h4> <ul> <li>Download the plugin <a href='https://developer.bcc.no/api/updates/bcc-signon.zip'>here</a></li> <li>Navigate to <strong>Plugins &rarr; Add New &rarr; Upload Plugin</strong></li> <li>Select the bcc-signon.zip file on your disk</li> <li>Click on <strong>Install Now</strong></li> </ul> Activate the BCC Signon plugin from <strong>Plugins</strong> page.",
+"changelog": "<h4>1.0.0</h4><ul><li>Integration to BCC's Login System</li><li>Single Sign Out support</li><li>Private newsfeed support: you can choose to activate private newsfeed, which will generate a private link</li><li>Topbar integration</li></ul>"
+}
+}

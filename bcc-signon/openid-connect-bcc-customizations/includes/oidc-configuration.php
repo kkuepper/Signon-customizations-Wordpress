@@ -29,7 +29,7 @@ function oidc_default_settings($settings){
 		'link_existing_users' => 1,
 		'redirect_user_back' => 1,
 		'redirect_on_logout' => 1,
-		'enable_logging'  => 1,
+		'enable_logging'  => 0,
 		'log_limit'       => 100,
 	);
 	$settings = new OpenID_Connect_Generic_Option_Settings('openid_connect_generic_settings', $default_settings);
@@ -47,6 +47,7 @@ function handle_openid_error(){
 			wp_redirect(get_option('bcc_auth_domain') . '?message=consentrejected');
 			exit;    
 			break;
+		case "access-token-expired":
 		case "missing-state":
 			wp_redirect(home_url());
 			exit;    
