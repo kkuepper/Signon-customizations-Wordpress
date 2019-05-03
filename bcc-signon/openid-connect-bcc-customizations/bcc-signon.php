@@ -1,10 +1,4 @@
 <?php
-/*
-Plugin Name: BCC signon customizations
-Description: customizations for the BCC signon system (support: it@bcc.no).
-Version: 1.0.0
-Author: BCC
-*/
 
 class BCC_Signon {
 	
