@@ -18,7 +18,7 @@ class BCC_Signon {
 
 		$this->private_newsfeed_link = esc_attr( get_option('private_newsfeed_link') );
 		if ($this->private_newsfeed_link == "") {
-			$this->private_newsfeed_link = strtolower(str_replace("-","",trim(createGUID(), '{}')));
+			$this->private_newsfeed_link = strtolower(str_replace("-","",trim($this->createGUID(), '{}')));
 			update_option('private_newsfeed_link', $this->private_newsfeed_link);
 		}
 
@@ -33,7 +33,7 @@ class BCC_Signon {
 	/**
 	 * Helper to create the GUID
 	 */
-	function createGUID()
+	private function createGUID()
 	{
 		if (function_exists('com_create_guid'))
 		{
