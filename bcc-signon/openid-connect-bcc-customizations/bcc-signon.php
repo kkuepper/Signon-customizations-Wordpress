@@ -139,9 +139,3 @@ class BCC_Signon {
 
 $plugin = new BCC_Signon();
 ?>
-		endif;
-	}
-}
-
-$plugin = new BCC_Signon();
-?>
