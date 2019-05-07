@@ -1,3 +1,7 @@
+<?php
+header('Content-Security-Policy: frame-ancestors https://*.bcc.no');
+?>
+
 <!DOCTYPE html>
 <html>
 <head>

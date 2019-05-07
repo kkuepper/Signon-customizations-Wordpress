@@ -16,7 +16,7 @@ function logout_without_confirm($action, $result)
 /* Add script tag for single signout */
 add_action('wp_footer', 'add_signout_script');
 function add_signout_script(){
-  $signout_path = wp_make_link_relative(plugins_url( '/bcc-signout',dirname(__FILE__)));
+  $signout_path = wp_make_link_relative(plugins_url( '/bcc-signout.php',dirname(__FILE__)));
   $redirect_path = urlencode(home_url('/wp-login.php?action=logout&signoutiframe=1', 'relative'));
 	echo ('<script type="text/javascript" src="' . get_option('bcc_auth_domain') . 'signout/js" signout-path="' . $signout_path . '?redirectpath=' .   $redirect_path . '"></script>');
 };
