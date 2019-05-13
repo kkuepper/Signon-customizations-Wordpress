@@ -20,7 +20,7 @@ function bcc_privacy_settings() {
 			// Set the headers to prevent caching
 			nocache_headers();
 			// Redirect
-			wp_safe_redirect( wp_login_url(), 302 ); exit;
+			wp_safe_redirect( wp_login_url($url), 302 ); exit;
 		}
     }
 }
