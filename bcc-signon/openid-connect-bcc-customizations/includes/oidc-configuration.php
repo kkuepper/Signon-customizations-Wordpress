@@ -8,10 +8,10 @@ function oidc_default_settings($settings){
 		'client_id'         => '',
 		'client_secret'     => '',
 		'scope'             => 'email openid profile',
-		'endpoint_login'    => 'https://bcc-sso.eu.auth0.com/authorize',
-		'endpoint_userinfo' => 'https://bcc-sso.eu.auth0.com/userinfo',
-		'endpoint_token'    => 'https://bcc-sso.eu.auth0.com/oauth/token',
-		'endpoint_end_session' => 'https://bcc-sso.eu.auth0.com/v2/logout',
+		'endpoint_login'    => 'https://login.bcc.no/authorize',
+		'endpoint_userinfo' => 'https://login.bcc.no/userinfo',
+		'endpoint_token'    => 'https://login.bcc.no/oauth/token',
+		'endpoint_end_session' => 'https://login.bcc.no/v2/logout',
 
 		// non-standard settings
 		'no_sslverify'    => 0,
