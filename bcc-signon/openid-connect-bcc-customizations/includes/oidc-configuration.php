@@ -12,11 +12,16 @@ function oidc_default_settings($settings){
 		'endpoint_userinfo' => 'https://login.bcc.no/userinfo',
 		'endpoint_token'    => 'https://login.bcc.no/oauth/token',
 		'endpoint_end_session' => 'https://login.bcc.no/v2/logout',
+		// Those following values are used to force the update of endpoints
+		'ep_login'    => 'https://login.bcc.no/authorize',
+		'ep_userinfo' => 'https://login.bcc.no/userinfo',
+		'ep_token'    => 'https://login.bcc.no/oauth/token',
+		'ep_end_session' => 'https://login.bcc.no/v2/logout',
 
 		// non-standard settings
 		'no_sslverify'    => 0,
 		'http_request_timeout' => 5,
-		'identity_key'    => 'preferred_username',
+		'identity_key'    => 'https://login.bcc.no/claims/personId',
 		'nickname_key'    => 'preferred_username',
 		'email_format'       => '{email}',
 		'displayname_format' => '{given_name} {family_name}',
@@ -41,7 +46,7 @@ function oidc_default_settings($settings){
  */
 add_action( 'wp_authenticate', 'handle_openid_error');
 function handle_openid_error(){
-	$error = $_GET["login-error"];
+	$error = isset($_GET['login-error']) ? $_GET["login-error"] : '';
 	switch ($error){
 		case "unknown-error":
 			wp_redirect(get_option('bcc_auth_domain') . '?message=consentrejected');
