@@ -13,10 +13,11 @@ function bcc_privacy_settings() {
 	}
 	// Redirect unauthorized visitors
 	if ( !is_user_logged_in() ) {
-		$is_login_url = preg_replace( '/\?.*/', '', $url ) == preg_replace( '/\?.*/', '', wp_login_url());
+		$no_query = preg_replace( '/\?.*/', '', $url );
+		$login_urls = array(preg_replace( '/\?.*/', '', wp_login_url()), home_url('/openid-connect-authorize'));
 		$unprotected_urls = array();
 		$unprotected_urls = apply_filters('bcc_unprotected_url', $unprotected_urls);
-        if ( !$is_login_url  && !in_array( $url, $unprotected_urls) ) {
+        if ( !(in_array($no_query, $login_urls) || in_array( $url, $unprotected_urls)) ) {
 			// Set the headers to prevent caching
 			nocache_headers();
 			// Redirect
