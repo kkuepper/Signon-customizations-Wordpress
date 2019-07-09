@@ -20,7 +20,7 @@ function private_link_feed() {
 	global $wp;
 	$url = home_url(add_query_arg(array($_GET), $wp->request));
 	if($url != home_url(get_private_link_feed())){
-	wp_die(__('No feed available'));  
+		wp_die(__('No feed available'));  
 	}
 }
 
@@ -41,7 +41,8 @@ if (get_option('private_newsfeeds') == 1) {
 
 	// Unprotect the endpoint
 	add_filter('bcc_unprotected_urls', function($urls){
-		return array_push($urls, home_url( get_private_link_feed()));
+		$urls[] = home_url( get_private_link_feed());
+		return $urls;
 	});
 }
 
