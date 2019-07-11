@@ -66,7 +66,8 @@ class BCC_Signon {
 		include_once plugin_dir_path( dirname( __FILE__) ) . 'openid-connect-bcc-customizations/includes/newsfeed.php';
 		include_once plugin_dir_path( dirname( __FILE__) ) . 'openid-connect-bcc-customizations/includes/oidc-configuration.php';
 		include_once plugin_dir_path( dirname( __FILE__) ) . 'openid-connect-bcc-customizations/includes/privacy-settings.php';
-		include_once plugin_dir_path( dirname( __FILE__) ) . 'openid-connect-bcc-customizations/includes/topbar.php';
+		include_once plugin_dir_path( dirname( __FILE__) ) . 'openid-connect-bcc-customizations/includes/widgets.php';
+
 	}
 
 	/**
@@ -162,6 +163,23 @@ class BCC_Signon {
 		</p>
 		<?php
 		endif;
+	}
+
+	/**
+	 * Get access_token of logged in user.
+	 */
+	public static function get_access_token(){
+	$user_id = get_current_user_id();
+	if ( empty( $user_id ) ){
+		return '';
+	}
+	$tokens = get_user_meta($user_id, 'openid-connect-generic-last-token-response', true);
+	if (empty( $tokens )) {
+		return '';
+	}
+	$access_token = $tokens['access_token'];
+
+	return $access_token;
 	}
 }
 
