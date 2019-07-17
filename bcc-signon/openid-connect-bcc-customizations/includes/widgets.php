@@ -49,7 +49,7 @@ add_shortcode( 'bcc-widgets-week-calendar', function ($attributes) {
     // normalize attribute keys, lowercase
     $attributes = array_change_key_case((array)$attributes, CASE_LOWER);
 
-    $html =  '<div id="bcc-calendar-week"></div>`';
+    $html =  '<div id="bcc-calendar-week"></div>';
     $html .= '<script id="script-bcc-calendar-week" data-authentication-type="inline-access-token" data-access-token="' . $access_token .'" ';
     $html .= 'data-language="' . $attributes['language'] . '" data-maxdays="' .  $attributes['maxdays'] . '" data-maxappointments="' . $attributes['maxappointments'] . '" ';
     $html .= 'data-calendars="' . $attributes['calendars'] .'" data-fullcalendarurl="' .  $attributes['fullcalendarurl'] .'" ';
@@ -66,7 +66,7 @@ add_shortcode( 'bcc-widgets-month-calendar', function ($attributes) {
     // normalize attribute keys, lowercase
     $attributes = array_change_key_case((array)$attributes, CASE_LOWER);
 
-    $html =  '<div id="bcc-calendar-month"></div>`';
+    $html =  '<div id="bcc-calendar-month"></div>';
     $html .= '<script id="script-bcc-calendar-month" data-authentication-type="inline-access-token" data-access-token="' . $access_token .'" ';
     $html .= 'data-language="' . $attributes['language'] . '"';
     $html .= 'data-calendars="' . $attributes['calendars'] .'" ';
