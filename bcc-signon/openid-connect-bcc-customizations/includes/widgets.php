@@ -50,7 +50,7 @@ add_shortcode( 'bcc-widgets-week-calendar', function ($attributes) {
     $attributes = array_change_key_case((array)$attributes, CASE_LOWER);
 
     $html =  '<div id="bcc-calendar-week"></div>';
-    $html .= '<script id="script-bcc-calendar-week" data-authentication-type="inline-access-token" data-access-token="' . $access_token .'" ';
+    $html .= '<script async="true" id="script-bcc-calendar-week" data-authentication-type="inline-access-token" data-access-token="' . $access_token .'" ';
     $html .= 'data-language="' . $attributes['language'] . '" data-maxdays="' .  $attributes['maxdays'] . '" data-maxappointments="' . $attributes['maxappointments'] . '" ';
     $html .= 'data-calendars="' . $attributes['calendars'] .'" data-fullcalendarurl="' .  $attributes['fullcalendarurl'] .'" ';
     $html .= 'src="https://widgets.bcc.no/widgets/CalendarWeekJs"></script>';
@@ -67,10 +67,42 @@ add_shortcode( 'bcc-widgets-month-calendar', function ($attributes) {
     $attributes = array_change_key_case((array)$attributes, CASE_LOWER);
 
     $html =  '<div id="bcc-calendar-month"></div>';
-    $html .= '<script id="script-bcc-calendar-month" data-authentication-type="inline-access-token" data-access-token="' . $access_token .'" ';
+    $html .= '<script async="true" id="script-bcc-calendar-month" data-authentication-type="inline-access-token" data-access-token="' . $access_token .'" ';
     $html .= 'data-language="' . $attributes['language'] . '"';
     $html .= 'data-calendars="' . $attributes['calendars'] .'" ';
     $html .= 'src="https://widgets.bcc.no/widgets/CalendarMonthJs"></script>';
     
     return $html;
+} );
+
+/** Search */
+add_shortcode( 'bcc-widgets-search', function ($attributes) {
+    $access_token = BCC_Signon::get_access_token();
+    
+    // normalize attribute keys, lowercase
+    $attributes = array_change_key_case((array)$attributes, CASE_LOWER);
+
+    $html =  '<div id="bcc-search"></div>';
+    $html .= '<script async="true" id="script-bcc-search" data-authentication-type="inline-access-token" data-access-token="' . $access_token .'" ';
+    $html .= 'data-language="' . $attributes['language'] . '"';
+    $html .= 'data-hidesearchbox="' . $attributes['hidesearchbox'] .'" ';
+    $html .= 'data-searchquery="' . $attributes['searchquery'] .'" ';
+    $html .= 'src="https://widgets.bcc.no/widgets/SearchJs"></script>';
+    
+    return $html;
+} );
+
+/** TVGuide */
+add_shortcode( 'bcc-widgets-tvguide', function ($attributes) {
+    $access_token = BCC_Signon::get_access_token();
+    
+    // normalize attribute keys, lowercase
+    $attributes = array_change_key_case((array)$attributes, CASE_LOWER);
+
+    $html = '<div id="bcc-tvguide"></div>';
+    $html .= '<script async="true" id="script-bcc-tvguide" data-authentication-type="inline-access-token" data-access-token="' . $access_token .'" ';
+	$html .= 'data-language="' . $attributes['language'] . '" ';
+    $html .= 'data-maxdays="' . $attributes['maxdays'] . '" src="https://widgets.bcc.no/widgets/TvGuideJs"></script>';
+    
+	return $html;
 } );
