@@ -4,6 +4,7 @@
  * Creating a private newsfeed link (with a GUID)
  * Disabling all the other newfeed links
  * Unprotecting the private url
+ * Adding the featured image of articles to the RSS feed
  */
 
 /**
@@ -27,7 +28,6 @@ function private_link_feed() {
 /**
  * Adds feed if private newsfeeds is checked
  */
-
 if (get_option('private_newsfeeds') == 1) {
 	add_action('do_feed', 'private_link_feed', 1);
 	add_action('do_feed_rdf', 'private_link_feed', 1);
@@ -46,5 +46,15 @@ if (get_option('private_newsfeeds') == 1) {
 	});
 }
 
+/**
+ * Adds the featured image to the RSS feed
+ */
+function featuredImagetoRSS($content) {
+	global $post;
+	if ( has_post_thumbnail( $post->ID ) )
+		$content = '<div>' . get_the_post_thumbnail( $post->ID, 'medium') . '</div>' . $content;
+	return $content;
+}
+add_filter('the_excerpt_rss', 'featuredImagetoRSS');
 
 ?>
