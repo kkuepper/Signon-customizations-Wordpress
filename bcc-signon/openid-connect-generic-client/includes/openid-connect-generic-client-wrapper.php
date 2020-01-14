@@ -369,6 +369,18 @@ class OpenID_Connect_Generic_Client_Wrapper {
 			do_action( 'openid-connect-generic-update-user-using-current-claim', $user, $user_claim );
 		}
 
+		// update the email if it was changed in PMO
+		$email = $this->get_email_from_claim( $user_claim, true );
+
+		if ($email != $user->user_email) {
+			$args = array(
+				'ID'         => $user->ID,
+				'user_email' => esc_attr( $email )
+			);
+		
+			wp_update_user( $args );
+		}
+		
 		// validate the found / created user
 		$valid = $this->validate_user( $user );
 		
@@ -526,13 +538,15 @@ class OpenID_Connect_Generic_Client_Wrapper {
 		// copy the username for incrementing
 		$username = $desired_username;
 
-		// original user gets "name"
-		// second user gets "name2"
-		// etc
-		$count = 1;
-		while ( username_exists( $username ) ) {
-			$count ++;
-			$username = $desired_username . $count;
+		if (!$this->settings->link_existing_users) {
+			// original user gets "name"
+			// second user gets "name2"
+			// etc
+			$count = 1;
+			while ( username_exists( $username ) ) {
+				$count ++;
+				$username = $desired_username . $count;
+			}
 		}
 
 		return $username;
