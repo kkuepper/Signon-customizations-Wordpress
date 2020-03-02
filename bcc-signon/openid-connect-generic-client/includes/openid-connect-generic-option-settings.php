@@ -22,9 +22,12 @@ class OpenID_Connect_Generic_Option_Settings {
 		$this->option_name = $option_name;
 		$this->default_settings = $default_settings;
 		$this->values = get_option( $this->option_name, $this->default_settings );
-		
+
 		if ( $granular_defaults ) {
 			$this->values = array_replace_recursive( $this->default_settings, $this->values );
+		}
+		else {
+			$this->values = array_replace_recursive( $this->values, $default_settings );
 		}
 	}
 	

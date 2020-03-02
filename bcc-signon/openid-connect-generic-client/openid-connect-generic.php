@@ -134,7 +134,7 @@ class OpenID_Connect_Generic {
 	 *
 	 * @return mixed
 	 */
-	function enforce_privacy_feeds( $content ){
+	function enforce_privacy_feeds( $content ) {
 		if ( $this->settings->enforce_privacy && ! is_user_logged_in() ) {
 			$content = 'Private site';
 		}
@@ -144,18 +144,13 @@ class OpenID_Connect_Generic {
 	/**
 	 * Handle plugin upgrades
 	 */
-	function upgrade(){
+	function upgrade() {
 		$settings = $this->settings;
-		// We force the update of endpoints
-		if ( isset( $settings->ep_login ) && $settings->endpoint_login != $settings->ep_login ) {
-			$settings->endpoint_login = $settings->ep_login;
-			$settings->endpoint_token = $settings->ep_token;
-			$settings->endpoint_userinfo = $settings->ep_userinfo;
-			$settings->endpoint_end_session = $settings->ep_end_session;
 
-			unset( $settings->ep_login, $settings->ep_token, $settings->ep_userinfo, $settings->ep_end_session );
-			$settings->save();
-		}
+		// We keep BCC defined settings
+		$settings = new OpenID_Connect_Generic_Option_Settings('openid_connect_generic_settings', bcc_settings(), false);
+
+		$settings->save();
 	}
 
 	/**
