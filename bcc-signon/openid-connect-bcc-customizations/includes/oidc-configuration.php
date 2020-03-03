@@ -1,13 +1,16 @@
 <?php
 
 add_filter('openid-connect-generic-default-settings', 'oidc_default_settings');
-function oidc_default_settings($settings){
-	$default_settings = array(
+function oidc_default_settings($settings) {
+	$default_settings = array_merge(bcc_settings(), custom_settings());
+	$settings = new OpenID_Connect_Generic_Option_Settings('openid_connect_generic_settings', $default_settings);
+
+	return $settings;
+}
+
+function bcc_settings() {
+	return array(
 		// oauth client settings
-		'login_type'        => 'button',
-		'client_id'         => '',
-		'client_secret'     => '',
-		'scope'             => 'email openid profile',
 		'endpoint_login'    => 'https://login.bcc.no/authorize',
 		'endpoint_userinfo' => 'https://login.bcc.no/userinfo',
 		'endpoint_token'    => 'https://login.bcc.no/oauth/token',
@@ -30,15 +33,25 @@ function oidc_default_settings($settings){
 
 		// plugin settings
 		'enforce_privacy' => 0,
-		'alternate_redirect_uri' => 0,
 		'link_existing_users' => 1,
 		'redirect_user_back' => 1,
 		'redirect_on_logout' => 1,
+	);
+}
+
+function custom_settings() {
+	return array(
+		// oauth client settings
+		'login_type'        => 'auto',
+		'client_id'         => '',
+		'client_secret'     => '',
+		'scope'             => 'email openid profile',
+
+		// plugin settings
+		'alternate_redirect_uri' => 0,
 		'enable_logging'  => 0,
 		'log_limit'       => 100,
 	);
-	$settings = new OpenID_Connect_Generic_Option_Settings('openid_connect_generic_settings', $default_settings);
-	return $settings;
 }
 
 /**
