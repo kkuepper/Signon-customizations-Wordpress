@@ -86,7 +86,7 @@ class BCC_Signon {
 
 			/* Fields */
 			add_settings_field('bcc_auth_domain', "BCC Signon URL", array ($this, 'do_text_field'), $this->options_page_name, 'oidc', 
-				array('name' => 'bcc_auth_domain', 'value' => $this->bcc_auth_domain));
+				array('name' => 'bcc_auth_domain', 'value' => $this->bcc_auth_domain, 'readonly' => 1));
 			add_settings_field('private_newsfeeds', "Enable Private Newsfeeds", array ($this, 'do_checkbox_field'), $this->options_page_name, 'newsfeed', 
 				array('name' => 'private_newsfeeds', 'value' => $this->private_newsfeeds, 
 				'description' => 'This makes the newsfeed of your site only accessible via the <code>Private newsfeed link</code> (including the genreated <code>id</code> in the query-string).'));
@@ -124,12 +124,12 @@ class BCC_Signon {
 	public function do_text_field($args){
 		?>
 		<input type="text"
-			id="<?php echo $args['name'];?>"
-			name="<?php echo $args['name'];?>"
+			id="<?php echo $args['name']; ?>"
+			name="<?php echo $args['name']; ?>"
 			class="large-text"
-			value="<?php echo $args['value'];?>" 
+			value="<?php echo $args['value']; ?>" 
 			size="65"
-			<?php if (isset($agrs['readonly']) && $args['readonly']): echo "readonly"; endif; ?>>
+			<?php if (isset($args['readonly']) && $args['readonly']) : echo "readonly"; endif; ?>>
 		<?php
 		$this->do_field_description($args);
 	}
@@ -140,10 +140,11 @@ class BCC_Signon {
 	public function do_checkbox_field($args){
 		?>
 		<input type="checkbox"
-			id="<?php echo $args['name'];?>"
-			name="<?php echo $args['name'];?>"
+			id="<?php echo $args['name']; ?>"
+			name="<?php echo $args['name']; ?>"
 			<?php checked($args['value']); ?>
-			value="1" >
+			value="1"
+			<?php if (isset($args['readonly']) && $args['readonly']) : echo "readonly onclick='return false;'"; endif; ?>>
 		<?php
 		$this->do_field_description($args);
 	}
