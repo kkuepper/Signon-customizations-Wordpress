@@ -106,3 +106,20 @@ add_shortcode( 'bcc-widgets-tvguide', function ($attributes) {
     
 	return $html;
 } );
+
+/** Birthday */
+add_shortcode( 'bcc-widgets-birthday', function ($attributes) {
+	$access_token = BCC_Signon::get_access_token();
+
+	// normalize attribute keys, lowercase
+	$attributes = array_change_key_case((array)$attributes, CASE_LOWER);
+
+	$html = '<div id="bcc-birthday"></div>';
+	$html .= '<script async="true" id="script-bcc-birthday" data-authentication-type="inline-access-token" data-access-token="' . $access_token .'" ';
+	$html .= 'data-language="' . $attributes['language'] . '" ';
+	$html .= 'data-churchname="' . $attributes['churchname'] . '" ';
+	$html .= 'data-maxdays="' . $attributes['maxdays'] . '" ';
+	$html .= 'src="https://widgets.bcc.no/widgets/BirthdayJs"></script>';
+
+	return $html;
+} );
