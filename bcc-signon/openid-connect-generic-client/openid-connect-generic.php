@@ -3,7 +3,7 @@
 Plugin Name: OpenID Connect Generic
 Plugin URI: https://github.com/daggerhart/openid-connect-generic
 Description:  Connect to an OpenID Connect generic client using Authorization Code Flow
-Version: 3.4.1
+Version: 3.5.1
 Author: daggerhart
 Author URI: http://www.daggerhart.com
 License: GPLv2 Copyright (c) 2015 daggerhart
@@ -14,20 +14,23 @@ Notes
   Spec Doc - http://openid.net/specs/openid-connect-basic-1_0-32.html
 
   Filters
-  - openid-connect-generic-alter-request      - 3 args: request array, plugin settings, specific request op
-  - openid-connect-generic-settings-fields    - modify the fields provided on the settings page
-  - openid-connect-generic-login-button-text  - modify the login button text
-  - openid-connect-generic-user-login-test    - (bool) should the user be logged in based on their claim
-  - openid-connect-generic-user-creation-test - (bool) should the user be created based on their claim
-  - openid-connect-generic-auth-url           - modify the authentication url
-  - openid-connect-generic-alter-user-claim   - modify the user_claim before a new user is created
-  - openid-connect-generic-alter-user-data    - modify user data before a new user is created
+  - openid-connect-generic-alter-request       - 3 args: request array, plugin settings, specific request op
+  - openid-connect-generic-settings-fields     - modify the fields provided on the settings page
+  - openid-connect-generic-login-button-text   - modify the login button text
+  - openid-connect-generic-cookie-redirect-url - modify the redirect url stored as a cookie
+  - openid-connect-generic-user-login-test     - (bool) should the user be logged in based on their claim
+  - openid-connect-generic-user-creation-test  - (bool) should the user be created based on their claim
+  - openid-connect-generic-auth-url            - modify the authentication url
+  - openid-connect-generic-alter-user-claim    - modify the user_claim before a new user is created
+  - openid-connect-generic-alter-user-data     - modify user data before a new user is created
 
   Actions
   - openid-connect-generic-user-create        - 2 args: fires when a new user is created by this plugin
   - openid-connect-generic-user-update        - 1 arg: user ID, fires when user is updated by this plugin
   - openid-connect-generic-update-user-using-current-claim - 2 args: fires every time an existing user logs
   - openid-connect-generic-redirect-user-back - 2 args: $redirect_url, $user. Allows interruption of redirect during login.
+  - openid-connect-generic-user-logged-in     - 1 arg: $user, fires when user is logged in.
+  - openid-connect-generic-cron-daily         - daily cron action
 
   User Meta
   - openid-connect-generic-subject-identity    - the identity of the user provided by the idp
@@ -43,7 +46,7 @@ Notes
 
 class OpenID_Connect_Generic {
 	// plugin version
-	const VERSION = '3.4.1';
+	const VERSION = '3.5.1';
 
 	// plugin settings
 	private $settings;
@@ -75,9 +78,6 @@ class OpenID_Connect_Generic {
 	 * WP Hook 'init'
 	 */
 	function init(){
-		if ( defined( 'WP_CLI' ) && WP_CLI ) {
-			return;
-		}
 
 		$redirect_uri = admin_url( 'admin-ajax.php?action=openid-connect-authorize' );
 
@@ -102,10 +102,17 @@ class OpenID_Connect_Generic {
 		);
 
 		$this->client_wrapper = OpenID_Connect_Generic_Client_Wrapper::register( $this->client, $this->settings, $this->logger );
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			return;
+		}
+
 		$this->login_form = OpenID_Connect_Generic_Login_Form::register( $this->settings, $this->client_wrapper );
 
 		// add a shortcode to get the auth url
 		add_shortcode( 'openid_connect_generic_auth_url', array( $this->client_wrapper, 'get_authentication_url' ) );
+
+		// add actions to our scheduled cron jobs
+		add_action( 'openid-connect-generic-cron-daily', [ $this, 'cron_states_garbage_collection'] );
 
 		$this->upgrade();
 
@@ -134,7 +141,7 @@ class OpenID_Connect_Generic {
 	 *
 	 * @return mixed
 	 */
-	function enforce_privacy_feeds( $content ) {
+	function enforce_privacy_feeds( $content ){
 		if ( $this->settings->enforce_privacy && ! is_user_logged_in() ) {
 			$content = 'Private site';
 		}
@@ -144,13 +151,59 @@ class OpenID_Connect_Generic {
 	/**
 	 * Handle plugin upgrades
 	 */
-	function upgrade() {
+	function upgrade(){
+		$last_version = get_option( 'openid-connect-generic-plugin-version', 0 );
 		$settings = $this->settings;
 
 		// We keep BCC defined settings
 		$settings = new OpenID_Connect_Generic_Option_Settings('openid_connect_generic_settings', bcc_settings(), false);
-
 		$settings->save();
+
+		if ( version_compare( self::VERSION, $last_version, '>' ) ) {
+			// upgrade required
+			self::setup_cron_jobs();
+
+			// update the stored version number
+			update_option( 'openid-connect-generic-plugin-version', self::VERSION );
+		}
+	}
+
+	/**
+	 * Expire state transients by attempting to access them and allowing the
+	 * transient's own mechanisms to delete any that have expired.
+	 */
+	function cron_states_garbage_collection() {
+		global $wpdb;
+		$states = $wpdb->get_col( "SELECT `option_name` FROM {$wpdb->options} WHERE `option_name` LIKE 'openid-connect-generic-state--%'" );
+
+		if ( !empty( $states ) ) {
+			foreach ( $states as $state ) {
+				get_transient( $state );
+			}
+		}
+	}
+
+	/**
+	 * Ensure cron jobs are added to the schedule.
+	 */
+	static public function setup_cron_jobs() {
+		if ( ! wp_next_scheduled( 'openid-connect-generic-cron-daily' ) ) {
+			wp_schedule_event( time(), 'daily', 'openid-connect-generic-cron-daily' );
+		}
+	}
+
+	/**
+	 * Activation hook.
+	 */
+	static public function activation() {
+		self::setup_cron_jobs();
+	}
+
+	/**
+	 * Deactivation hook.
+	 */
+	static public function deactivation() {
+		wp_clear_scheduled_hook( 'openid-connect-generic-cron-daily' );
 	}
 
 	/**
@@ -224,7 +277,7 @@ class OpenID_Connect_Generic {
 
 		/* Customize default settings */
 		$settings = apply_filters( 'openid-connect-generic-default-settings', $settings);
-
+		
 		$logger = new OpenID_Connect_Generic_Option_Logger( 'openid-connect-generic-logs', 'error', $settings->enable_logging, $settings->log_limit );
 
 		$plugin = new self( $settings, $logger );
@@ -240,3 +293,6 @@ class OpenID_Connect_Generic {
 }
 
 OpenID_Connect_Generic::bootstrap();
+
+register_activation_hook( __FILE__, [ 'OpenID_Connect_Generic', 'activation' ] );
+register_deactivation_hook( __FILE__, [ 'OpenID_Connect_Generic', 'deactivation' ] );

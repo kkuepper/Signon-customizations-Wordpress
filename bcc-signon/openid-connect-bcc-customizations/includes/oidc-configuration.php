@@ -28,7 +28,7 @@ function bcc_settings() {
 		'nickname_key'    => 'preferred_username',
 		'email_format'       => '{email}',
 		'displayname_format' => '{given_name} {family_name}',
-		'identify_with_username' => false,
+		'identify_with_username' => true,
 		'state_time_limit' => 180,
 
 		// plugin settings

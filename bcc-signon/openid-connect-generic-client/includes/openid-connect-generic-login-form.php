@@ -12,6 +12,9 @@ class OpenID_Connect_Generic_Login_Form {
 	function __construct( $settings, $client_wrapper ){
 		$this->settings = $settings;
 		$this->client_wrapper = $client_wrapper;
+
+		// maybe set redirect cookie on formular page
+		add_action('login_form_login', [$this, 'handle_redirect_cookie']);
 	}
 
 	/**
@@ -39,13 +42,15 @@ class OpenID_Connect_Generic_Login_Form {
 	 */
 	function handle_redirect_login_type_auto()
 	{
-		if ( $GLOBALS['pagenow'] == 'wp-login.php' && $this->settings->login_type == 'auto'
-			&& ( ! isset( $_GET[ 'action' ] ) || $_GET[ 'action' ] !== 'logout' ) && ( strpos( $_REQUEST[ 'redirect_to' ] , 'wp-admin' ) === false ) )
+		if ( $GLOBALS['pagenow'] == 'wp-login.php'
+			&& ( $this->settings->login_type == 'auto' || ! empty( $_GET['force_redirect'] ) )
+			&& ( ! isset( $_GET[ 'action' ] ) || $_GET[ 'action' ] !== 'logout' )
+			&& ! isset( $_POST['wp-submit'] ) )
 		{
 			if (  ! isset( $_GET['login-error'] ) ) {
-				$this->handle_redirect_cookie();
+			    $this->handle_redirect_cookie();
 				wp_redirect( $this->client_wrapper->get_authentication_url() );
-				exit;	
+				exit;
 			}
 			else {
 				add_action( 'login_footer', array( $this, 'remove_login_form' ), 99 );
@@ -68,16 +73,18 @@ class OpenID_Connect_Generic_Login_Form {
 			$redirect_expiry = current_time('timestamp') + DAY_IN_SECONDS;
 
 			// default redirect to the homepage
-			$redirect_url = home_url( esc_url( add_query_arg( NULL, NULL ) ) );
+			$redirect_url = home_url( esc_url( add_query_arg( null, null ) ) );
 
 			if ( $GLOBALS['pagenow'] == 'wp-login.php' ) {
 				// if using the login form, default redirect to the admin dashboard
 				$redirect_url = admin_url();
 
 				if ( isset( $_REQUEST['redirect_to'] ) ) {
-					$redirect_url = esc_url( $_REQUEST[ 'redirect_to' ] );
+					$redirect_url = esc_url_raw( $_REQUEST[ 'redirect_to' ] );
 				}
 			}
+
+			$redirect_url = apply_filters( 'openid-connect-generic-cookie-redirect-url', $redirect_url );
 
 			setcookie( $this->client_wrapper->cookie_redirect_key, $redirect_url, $redirect_expiry, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
 		}
@@ -127,9 +134,6 @@ class OpenID_Connect_Generic_Login_Form {
 	function make_login_button() {
 		$text = apply_filters( 'openid-connect-generic-login-button-text', __( 'Login with OpenID Connect' ) );
 		$href = $this->client_wrapper->get_authentication_url();
-
-		// maybe set redirect cookie on formular page
-		$this->handle_redirect_cookie();
 
 		ob_start();
 		?>
