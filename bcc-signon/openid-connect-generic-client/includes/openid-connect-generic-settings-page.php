@@ -74,7 +74,7 @@ class OpenID_Connect_Generic_Settings_Page {
 				'example'     => 'https://example.com/oauth2/authorize',
 				'type'        => 'text',
 				'section'     => 'client_settings',
-				'readonly'	  => 1
+				'readonly'    => 1
 			),
 			'endpoint_userinfo' => array(
 				'title'       => __( 'Userinfo Endpoint URL' ),
@@ -82,7 +82,7 @@ class OpenID_Connect_Generic_Settings_Page {
 				'example'     => 'https://example.com/oauth2/UserInfo',
 				'type'        => 'text',
 				'section'     => 'client_settings',
-				'readonly'	  => 1
+				'readonly'    => 1
 			),
 			'endpoint_token'    => array(
 				'title'       => __( 'Token Validation Endpoint URL' ),
@@ -90,7 +90,7 @@ class OpenID_Connect_Generic_Settings_Page {
 				'example'     => 'https://example.com/oauth2/token',
 				'type'        => 'text',
 				'section'     => 'client_settings',
-				'readonly'	  => 1
+				'readonly'    => 1
 			),
 			'endpoint_end_session'    => array(
 				'title'       => __( 'End Session Endpoint URL' ),
@@ -98,7 +98,7 @@ class OpenID_Connect_Generic_Settings_Page {
 				'example'     => 'https://example.com/oauth2/logout',
 				'type'        => 'text',
 				'section'     => 'client_settings',
-				'readonly'	  => 1
+				'readonly'    => 1
 			),
 			'identity_key'     => array(
 				'title'       => __( 'Identity Key' ),
@@ -106,14 +106,14 @@ class OpenID_Connect_Generic_Settings_Page {
 				'example'     => 'preferred_username',
 				'type'        => 'text',
 				'section'     => 'client_settings',
-				'readonly'	  => 1
+				'readonly'    => 1
 			),
 			'no_sslverify'      => array(
 				'title'       => __( 'Disable SSL Verify' ),
 				'description' => __( 'Do not require SSL verification during authorization. The OAuth extension uses curl to make the request. By default CURL will generally verify the SSL certificate to see if its valid an issued by an accepted CA. This setting disabled that verification.<br><strong>Not recommended for production sites.</strong>' ),
 				'type'        => 'checkbox',
 				'section'     => 'client_settings',
-				'readonly'	  => 1
+				'readonly'    => 1
 			),
 			'http_request_timeout'      => array(
 				'title'       => __( 'HTTP Request Timeout' ),
@@ -121,15 +121,15 @@ class OpenID_Connect_Generic_Settings_Page {
 				'example'     => 30,
 				'type'        => 'text',
 				'section'     => 'client_settings',
-				'readonly'	  => 1
-			),
+				'readonly'    => 1
+			),			
 			'nickname_key'     => array(
 				'title'       => __( 'Nickname Key' ),
 				'description' => __( 'Where in the user claim array to find the user\'s nickname. Possible standard values: preferred_username, name, or sub.' ),
 				'example'     => 'preferred_username',
 				'type'        => 'text',
 				'section'     => 'client_settings',
-				'readonly'	  => 1
+				'readonly'    => 1
 			),
 			'email_format'     => array(
 				'title'       => __( 'Email Formatting' ),
@@ -137,7 +137,7 @@ class OpenID_Connect_Generic_Settings_Page {
 				'example'     => '{email}',
 				'type'        => 'text',
 				'section'     => 'client_settings',
-				'readonly'	  => 1
+				'readonly'    => 1
 			),
 			'displayname_format'     => array(
 				'title'       => __( 'Display Name Formatting' ),
@@ -145,49 +145,49 @@ class OpenID_Connect_Generic_Settings_Page {
 				'example'     => '{given_name} {family_name}',
 				'type'        => 'text',
 				'section'     => 'client_settings',
-				'readonly'	  => 1
+				'readonly'    => 1
 			),
 			'identify_with_username'     => array(
 				'title'       => __( 'Identify with User Name' ),
 				'description' => __( 'If checked, the user\'s identity will be determined by the user name instead of the email address.' ),
 				'type'        => 'checkbox',
 				'section'     => 'client_settings',
-				'readonly'	  => 1
+				'readonly'    => 1
 			),
 			'state_time_limit'     => array(
 				'title'       => __( 'State time limit' ),
 				'description' => __( 'State valid time in seconds. Defaults to 180' ),
 				'type'        => 'number',
 				'section'     => 'client_settings',
-				'readonly'	  => 1
+				'readonly'    => 1
 			),
 			'link_existing_users'   => array(
 				'title'       => __( 'Link Existing Users' ),
 				'description' => __( 'If a WordPress account already exists with the same identity as a newly-authenticated user over OpenID Connect, login as that user instead of generating an error.' ),
 				'type'        => 'checkbox',
 				'section'     => 'user_settings',
-				'readonly'	  => 1
+				'readonly'    => 1
 			),
 			'redirect_user_back'   => array(
 				'title'       => __( 'Redirect Back to Origin Page' ),
 				'description' => __( 'After a successful OpenID Connect authentication, this will redirect the user back to the page on which they clicked the OpenID Connect login button. This will cause the login process to proceed in a traditional WordPress fashion. For example, users logging in through the default wp-login.php page would end up on the WordPress Dashboard and users logging in through the WooCommerce "My Account" page would end up on their account page.' ),
 				'type'        => 'checkbox',
 				'section'     => 'user_settings',
-				'readonly'	  => 1
+				'readonly'    => 1
 			),
 			'redirect_on_logout'   => array(
 				'title'       => __( 'Redirect to the login screen session is expired' ),
 				'description' => __( 'When enabled, this will automatically redirect the user back to the WordPress login page if their access token has expired.' ),
 				'type'        => 'checkbox',
 				'section'     => 'user_settings',
-				'readonly'	  => 1
+				'readonly'    => 1
 			),
 			'enforce_privacy'   => array(
 				'title'       => __( 'Enforce Privacy' ),
 				'description' => __( 'Require users be logged in to see the site.' ),
 				'type'        => 'checkbox',
 				'section'     => 'authorization_settings',
-				'readonly'	  => 1
+				'readonly'    => 1
 			),
 			'alternate_redirect_uri'   => array(
 				'title'       => __( 'Alternate Redirect URI' ),
@@ -289,7 +289,7 @@ class OpenID_Connect_Generic_Settings_Page {
 		foreach ( $this->settings_fields as $key => $field ) {
 			// make sure each key exists in the settings array
 			if ( ! isset( $this->settings->{ $key } ) ) {
-				$this->settings->{ $key } = NULL;
+				$this->settings->{ $key } = null;
 			}
 
 			// determine appropriate output callback
@@ -401,7 +401,7 @@ class OpenID_Connect_Generic_Settings_Page {
 		       class="large-text"
 		       name="<?php print esc_attr( $field['name'] ); ?>"
 		       value="<?php print esc_attr( $this->settings->{ $field['key'] } ); ?>"
-			   <?php if (isset($field['readonly']) && $field['readonly']) print "readonly"; ?>>
+		       <?php if (isset($field['readonly']) && $field['readonly']) print "readonly"; ?>>
 		<?php
 		$this->do_field_description( $field );
 	}

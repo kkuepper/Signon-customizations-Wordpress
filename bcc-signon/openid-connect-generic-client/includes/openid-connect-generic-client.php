@@ -44,8 +44,13 @@ class OpenID_Connect_Generic_Client {
 	 * @return string
 	 */
 	function make_authentication_url() {
-		$url = sprintf( '%1$s?response_type=code&scope=%2$s&client_id=%3$s&state=%4$s&redirect_uri=%5$s',
+		$separator = '?';
+		if ( stripos( $this->endpoint_login, '?' ) !== FALSE ) {
+			$separator = '&';
+		}
+		$url = sprintf( '%1$s%2$sresponse_type=code&scope=%3$s&client_id=%4$s&state=%5$s&redirect_uri=%6$s',
 			$this->endpoint_login,
+			$separator,
 			urlencode( $this->scope ),
 			urlencode( $this->client_id ),
 			$this->new_state(),
@@ -172,7 +177,7 @@ class OpenID_Connect_Generic_Client {
 		}
 
 		// extract token response from token
-		$token_response = json_decode( $token_result['body'], TRUE );
+		$token_response = json_decode( $token_result['body'], true );
 
 		if ( isset( $token_response[ 'error' ] ) ) {
 			$error = $token_response[ 'error' ];
@@ -227,53 +232,31 @@ class OpenID_Connect_Generic_Client {
 	}
 
 	/**
-	 * Generate a new state, save it to the states option with a timestamp,
-	 *  and return it.
+	 * Generate a new state, save it as a transient,
+	 *  and return the state hash.
 	 *
 	 * @return string
 	 */
 	function new_state() {
-		$states = get_option( 'openid-connect-generic-valid-states', array() );
-
 		// new state w/ timestamp
-		$new_state            = md5( mt_rand() . microtime( true ) );
-		$states[ $new_state ] = time();
+		$state = md5( mt_rand() . microtime( true ) );
+		$expire = time() + $this->state_time_limit;
+		set_transient( 'openid-connect-generic-state--' . $state, $state, $expire );
 
-		// save state
-		update_option( 'openid-connect-generic-valid-states', $states );
-
-		return $new_state;
+		return $state;
 	}
 
 	/**
-	 * Check the validity of a given state
+	 * Check the existence of a given state transient.
 	 *
 	 * @param $state
 	 * 
 	 * @return bool
 	 */
 	function check_state( $state ) {
-		$states = get_option( 'openid-connect-generic-valid-states', array() );
-		$valid  = FALSE;
+		$valid = get_transient( 'openid-connect-generic-state--' . $state );
 
-		// remove any expired states
-		foreach ( $states as $code => $timestamp ) {
-			if ( ( $timestamp + $this->state_time_limit ) < time() ) {
-				unset( $states[ $code ] );
-			}
-		}
-
-		// see if the current state is still within the list of valid states
-		if ( isset( $states[ $state ] ) ) {
-			// state is valid, remove it
-			unset( $states[ $state ] );
-			$valid = TRUE;
-		}
-
-		// save our altered states
-		update_option( 'openid-connect-generic-valid-states', $states );
-
-		return $valid;
+		return !!$valid;
 	}
 
 	/**
@@ -324,7 +307,7 @@ class OpenID_Connect_Generic_Client {
 					$tmp[1]
 				)
 			)
-			, TRUE
+			, true
 		);
 		
 		return $id_token_claim;
@@ -366,7 +349,7 @@ class OpenID_Connect_Generic_Client {
 			return new WP_Error( 'bad-claim', __( 'Bad user claim' ), $user_claim_result );
 		}
 
-		$user_claim = json_decode( $user_claim_result['body'], TRUE );
+		$user_claim = json_decode( $user_claim_result['body'], true );
 
 		return $user_claim;
 	}
@@ -401,7 +384,7 @@ class OpenID_Connect_Generic_Client {
 		}
 
 		// allow for other plugins to alter the login success
-		$login_user = apply_filters( 'openid-connect-generic-user-login-test', TRUE, $user_claim );
+		$login_user = apply_filters( 'openid-connect-generic-user-login-test', true, $user_claim );
 		
 		if ( ! $login_user ) {
 			return new WP_Error( 'unauthorized', __( 'Unauthorized access' ), $login_user );

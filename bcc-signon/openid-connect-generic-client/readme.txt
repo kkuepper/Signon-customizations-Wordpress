@@ -3,7 +3,7 @@ Contributors: daggerhart
 Donate link: http://www.daggerhart.com/
 Tags: security, login, oauth2, openidconnect, apps, authentication, autologin, sso 
 Requires at least: 4
-Tested up to: 4.9.8
+Tested up to: 5.2.2
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -36,8 +36,32 @@ by this client is like so:  https://example.com/wp-admin/admin-ajax.php?action=o
 
 Replace `example.com` with your domain name and path to WordPress.
 
+= Can I change the client's Redirect URI? =
+
+Some OAuth2 servers do not allow for a client redirect URI to contain a query string. The default URI provided by
+this module leverages WordPress's `admin-ajax.php` endpoint as an easy way to provide a route that does not include
+HTML, but this will naturally involve a query string. Fortunately, this plugin provides a setting that will make use of
+an alternate redirect URI that does not include a query string.
+
+On the settings page for this plugin (Dashboard > Settings > OpenID Connect Generic) there is a checkbox for
+**Alternate Redirect URI**. When checked, the plugin will use the Redirect URI
+`https://example.com/openid-connect-authorize`.
+
 
 == Changelog ==
+
+= 3.5.1 =
+
+* Fix: @daggerhart - New approach to state management using transients.
+
+= 3.5.0 =
+
+* Readme fix: @thijskh - Fix syntax error in example openid-connect-generic-login-button-text
+* Feature: @slavicd - Allow override of the plugin by posting credentials to wp-login.php
+* Feature: @gassan - New action on use login
+* Fix: @daggerhart - Avoid double question marks in auth url query string
+* Fix: @drzraf - wp-cli bootstrap must not inhibit custom rewrite rules
+* Syntax change: @mullikine - Change PHP keywords to comply with PSR2
 
 = 3.4.1 =
 
