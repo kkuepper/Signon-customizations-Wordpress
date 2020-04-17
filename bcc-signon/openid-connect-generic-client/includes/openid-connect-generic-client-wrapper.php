@@ -354,7 +354,7 @@ class OpenID_Connect_Generic_Client_Wrapper {
 		 * Request is authenticated and authorized - start user handling
 		 */
 		$subject_identity = $client->get_subject_identity( $id_token_claim );
-		$user = $this->get_user_by_identity( $subject_identity );
+		$user = $this->get_user_by_identity( $user_claim );
 
 		// if we didn't find an existing user, we'll need to create it
 		if ( ! $user ) {
@@ -427,6 +427,7 @@ class OpenID_Connect_Generic_Client_Wrapper {
 		update_user_meta( $user->ID, 'openid-connect-generic-last-token-response', $token_response );
 		update_user_meta( $user->ID, 'openid-connect-generic-last-id-token-claim', $id_token_claim );
 		update_user_meta( $user->ID, 'openid-connect-generic-last-user-claim', $user_claim );
+		update_user_meta( $user->ID, 'openid-connect-generic-subject-identity', $subject_identity );
 
 		// Create the WP session, so we know its token
 		$expiration = time() + apply_filters( 'auth_cookie_expiration', 2 * DAY_IN_SECONDS, $user->ID, false );
@@ -471,17 +472,21 @@ class OpenID_Connect_Generic_Client_Wrapper {
 	/**
 	 * Get the user that has meta data matching a 
 	 * 
-	 * @param $subject_identity
+	 * @param $user_claim
 	 *
 	 * @return false|\WP_User
 	 */
-	function get_user_by_identity( $subject_identity ){
-		// look for user by their openid-connect-generic-subject-identity value
+	function get_user_by_identity( $user_claim ){
+		$person_id = $user_claim["https://login.bcc.no/claims/personId"];
+		$person_id_serialized = 's:36:"https://login.bcc.no/claims/personId";i:' . $person_id;
+
+		// look for user containing this person_id in it's openid-connect-generic-last-user-claim value
 		$user_query = new WP_User_Query( array(
 			'meta_query' => array(
 				array(
-					'key'   => 'openid-connect-generic-subject-identity',
-					'value' => $subject_identity,
+					'key'   => 'openid-connect-generic-last-user-claim',
+					'value' => $person_id_serialized,
+					'compare' => 'LIKE'
 				)
 			)
 		) );
